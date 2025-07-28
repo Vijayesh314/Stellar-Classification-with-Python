@@ -5,3 +5,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+stardata = pd.read_csv("stardataset.csv")
+df = pd.DataFrame(stardata)
+print("Original Data Head:")
+print(df.head())
