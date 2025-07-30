@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split, learning_curve
+from sklearn.model_selection import train_test_split, learning_curve, cross_val_score, GridSearchCV
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
@@ -101,6 +101,44 @@ print(f"Testing set shape: {xtest.shape}")
 # Model Training (Random Forest Classifier) and Evaluation
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(xtrain, ytrain)
+
+# Cross-Validation Score for Initial Model
+print("\nCross-Validation Score for Initial Model:")
+# 5-fold cross-validation on the full scaled dataset
+cvscores = cross_val_score(model, xscaleddf, y, cv=5, scoring="accuracy", n_jobs=-1)
+print(f"Individual CV Accuracies: {cvscores}")
+print(f"Mean CV Accuracy: {np.mean(cvscores):.4f} (+/- {np.std(cvscores):.4f})")
+
+# Hyperparameter Tuning with GridSearchCV
+print("\n Starting Hyperparameter Tuning with GridSearchCV")
+
+# Parameter grid to search
+paramgrid = {
+    "n_estimators":[50, 100, 150],
+    "max_features":["sqrt", "log2"],
+    "max_depth":[10, 20, None],
+    "min_samples_split":[2, 5],
+    "min_samples_leaf":[1, 2]
+}
+
+# GridSearchCV object fit to training data
+gridsearch = GridSearchCV(
+    estimator=RandomForestClassifier(random_state=42),
+    param_grid=paramgrid,
+    cv=5,
+    scoring="accuracy",
+    n_jobs=-1,
+    verbose=2
+)
+gridsearch.fit(xtrain, ytrain)
+
+# Best parameters and score
+print(f"\nBest parameters found by GridSearchCV: {gridsearch.best_params_}")
+print(f"Best cross-validation accuracy on training set: {gridsearch.best_score_}")
+
+# Fixed model based on GridSearchCV
+model = gridsearch.best_estimator_
+print("\nModel updated to the best estimator from GridSearchCV")
 
 ypred = model.predict(xtest)
 print("\n--- Model Evaluation ---")
