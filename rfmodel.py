@@ -24,6 +24,56 @@ print(df.head())
 print("\nData Frame Columns after Renaming")
 print(df.columns)
 
+# Initial Data Distribution Plots
+
+# Distribution of Star Types (target variable)
+plt.figure(figsize=(8, 6))
+sns.countplot(data=df, x="StarType", palette="viridis")
+plt.title("Distribution of Star Types in Original Dataser")
+plt.xlabel("Star Type (numerical)")
+plt.ylabel("Count")
+plt.show()
+
+startypelabels = {0:"Brown Dwarf", 1:"Red Dwarf", 2:"White Dwarf",
+                  3:"Main Sequence", 4:"Supergiant", 5:"Hypergiant"}
+df["StarTypeLabel"] = df["StarType"].map(startypelabels)
+
+plt.figure(figsize=(10, 6))
+sns.countplot(data=df, x="StarTypeLabel", palette="viridis", order=[startypelabels[i] for i in sorted(startypelabels.keys())])
+plt.title("Distribution of Star Types (Labeled)")
+plt.xlabel("Star Type")
+plt.ylabel("Count")
+plt.xticks(rotation=45, ha="right")
+plt.show()
+
+# Distribution of Star Colors (categorical feature)
+plt.figure(figsize=(10, 6))
+sns.countplot(data=df, x="StarColor", palette="tab10", order=df["StarColor"].value_counts().index)
+plt.title("Distribution of Star Colors")
+plt.xlabel("Star Color")
+plt.ylabel("Count")
+plt.xticks(rotation=45, ha="right")
+plt.show()
+
+# Distribution of Numerical Features (histograms)
+numericalfeaturesplotting = ["Temperature", "Luminosity", "Radius", "AbsoluteMagnitude"]
+plt.figure(figsize=(16, 10))
+for i, col in enumerate(numericalfeaturesplotting):
+    plt.subplot(2, 2, i + 1)
+    sns.histplot(df[col], kde=True, bins=30)
+    plt.title(f"Distribution of {col}")
+    plt.xlabel(col)
+    plt.ylabel("Frequency")
+
+    if col in ["Luminosity", "Radius", "Temperature"] and (df[col] > 0).all():
+        plt.xscale("log")
+        plt.title(f"Distribution of {col} (Log Scale)")
+    elif col == "AbsoluteMagnitude":
+        pass
+
+plt.tight_layout()
+plt.show()
+
 # Encode Starcolor and Spectralclass
 lecolor = LabelEncoder()
 df["StarColorEncoded"] = lecolor.fit_transform(df["StarColor"])
@@ -65,7 +115,6 @@ print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
 # 3: Main Sequence
 # 4: Supergiant
 # 5: Hypergiant
-startypelabels = {0: "Brown Dwarf", 1: "Red Dwarf", 2: "White Dwarf", 3: "Main Sequence", 4: "Supergiant", 5: "Hypergiant"}
 targetnameslist = []
 for i in sorted(startypelabels.keys()):
     targetnameslist.append(startypelabels[i])
@@ -118,6 +167,13 @@ testscoresstd = np.std(testscores, axis=1)
 plt.figure(figsize=(12, 7))
 plt.plot(trainsizes, trainscoresmean, "o-", color="r", label="Training score")
 plt.plot(trainsizes, testscoresmean, "o-", color="g", label="Cross-validation score")
+plt.fill_between(trainsizes, trainscoresmean - trainscoresstd, trainscoresmean + trainscoresstd, alpha=0.1, color="r")
+plt.fill_between(trainsizes, testscoresmean - testscoresstd, testscoresmean + testscoresstd, alpha=0.1, color="g")
+plt.title("Learning Curve for RF Classifier")
+plt.xlabel("Training examples")
+plt.ylabel("Accuracy Score")
+plt.legend(loc="best")
+plt.grid()
 plt.show()
 
 # Classification Report Visualization
