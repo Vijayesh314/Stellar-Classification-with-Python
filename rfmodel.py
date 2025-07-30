@@ -81,30 +81,30 @@ df["StarColorEncoded"] = lecolor.fit_transform(df["StarColor"])
 # Define X (features) and Y (target star type)
 # Use all physical properties along with encoded color and spectral class
 features = ["Temperature", "Luminosity", "Radius", "AbsoluteMagnitude", "StarColorEncoded"]
-X = df[features]
-Y = df["StarType"]
+x = df[features]
+y = df["StarType"]
 
 # Scale numerical features
 scaler = StandardScaler()
-Xscaled = scaler.fit_transform(X)
-Xscaleddf = pd.DataFrame(Xscaled, columns=features)
-print(f"\nFeatures {Xscaleddf} head after scaling:")
-print(Xscaleddf.head())
-print(f"\nTarget {Y} head:")
-print(Y.head())
+xscaled = scaler.fit_transform(x)
+xscaleddf = pd.DataFrame(xscaled, columns=features)
+print(f"\nFeatures {xscaleddf} head after scaling:")
+print(xscaleddf.head())
+print(f"\nTarget {y} head:")
+print(y.head())
 
 # Data Splitting
-X_train, X_test, y_train, y_test = train_test_split(Xscaleddf, Y, test_size=0.3, random_state=42, stratify=Y)
-print(f"\nTraining set shape: {X_train.shape}")
-print(f"Testing set shape: {X_test.shape}")
+xtrain, xtest, ytrain, ytest = train_test_split(xscaleddf, y, test_size=0.3, random_state=42, stratify=y)
+print(f"\nTraining set shape: {xtrain.shape}")
+print(f"Testing set shape: {xtest.shape}")
 
 # Model Training (Random Forest Classifier) and Evaluation
 model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+model.fit(xtrain, ytrain)
 
-y_pred = model.predict(X_test)
+ypred = model.predict(xtest)
 print("\n--- Model Evaluation ---")
-print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+print(f"Accuracy: {accuracy_score(ytest, ypred):.2f}")
 
 # Map the numerical Star Type back to original labels
 # The unique values in 'Star Type' are 0 to 5.
@@ -119,10 +119,10 @@ targetnameslist = []
 for i in sorted(startypelabels.keys()):
     targetnameslist.append(startypelabels[i])
 print("\nClassification Report:")
-print(classification_report(y_test, y_pred, target_names=targetnameslist, zero_division=0))
+print(classification_report(ytest, ypred, target_names=targetnameslist, zero_division=0))
 
 # Confusion Matrix
-cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(ytest, ypred)
 plt.figure(figsize=(10, 8))
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
             xticklabels=targetnameslist,
@@ -150,8 +150,8 @@ if hasattr(model, "feature_importances_"):
 print("\nGenerating Learning Curve (might take a few moments)...")
 trainsizes, trainscores, testscores = learning_curve(
     estimator=model,
-    X=Xscaleddf,
-    y=Y,
+    X=xscaleddf,
+    y=y,
     train_sizes=np.linspace(0.1, 1.0, 10),
     cv=5,
     scoring='accuracy',
@@ -178,7 +178,7 @@ plt.show()
 
 # Classification Report Visualization
 # Convert classification report to a DataFrame Heatmap
-report = classification_report(y_test, y_pred, target_names=targetnameslist, output_dict=True, zero_division=0)
+report = classification_report(ytest, ypred, target_names=targetnameslist, output_dict=True, zero_division=0)
 dfreport = pd.DataFrame(report).transpose()
 # Select precision, recall, and f1-score for each class
 dfmetrics = dfreport.iloc[:-3, :3]
@@ -189,3 +189,31 @@ plt.title("Classification Report Metrics per Star Type")
 plt.xlabel("Metrics")
 plt.ylabel("Star Type")
 plt.show()
+
+# Showing Predictions on Sample Data
+
+samplesnum = 10
+sampleindices = np.random.choice(xtest.index, samplesnum, replace=False)
+
+# Get the actual data points from the DataFram
+# This is important to get the feature values for display
+sampleoriginaldata = df.loc[sampleindices, ["Temperature", "Luminosity", "Radius", "AbsoluteMagnitude", "StarColor", "StarType"]]
+sampleoriginaldata = sampleoriginaldata.copy()
+
+sampleXtest = xtest.loc[sampleindices]
+sampleYtrue = ytest.loc[sampleindices]
+sampleypred = model.predict(sampleXtest)
+
+sampleypredlabels = []
+for val in sampleypred:
+    sampleypredlabels.append(val)
+sampleytruelabels = []
+for val in sampleYtrue:
+    sampleytruelabels.append(val)
+
+sampleoriginaldata["TrueStarType"] = sampleytruelabels
+sampleoriginaldata["PredictedStarType"] = sampleypredlabels
+sampleoriginaldata["PredictionCorrect"] = (sampleoriginaldata["TrueStarType"] == sampleoriginaldata["PredictedStarType"])
+
+print("Sample of Test Data with Predictions:")
+print(sampleoriginaldata)
