@@ -23,6 +23,15 @@ The target variable is Star Type: a numerical label representing the star's clas
 * 4: Redgiant
 * 5: Hypergiant
 
+## Prerequisites
+Before running the code, make sure you have the following Python libraries installed. You can install them using pip:
+pip install pandas scikit-learn seaborn matplotlib numpy
+
+## Usage
+1. Download the dataset (given above) from either the kaggle link or the github link, and place it in the same directory as the Python script (download the python script as well)
+2. Execute the Python script from your terminal (make sure you're in the right directory) with python rfmodel.py, or whatever you would like to rename the file to
+The script will print various outputs to the console, including data insights, model evaluation metrics, and sample predictions. It will also generate several plots, which will be displayed one at a time after the former plot is closed (by clicking the x button).
+
 ## Code Overview
 The script rfmodel.py executes the following
 
@@ -60,3 +69,13 @@ Generates several plots to show the distribution of the key features
 
 ### Results
 The model achieves very high accuracy on this dataset, indicating a strong correlation between the physical properties and star type. The various plots and reports provide a deep dive into the model's performance and the characteristics of the data. The stellar classification is correlated to the Hertzsprung–Russell diagram, a key astrophysics relationship.
+
+## Next Steps/Future Enhancements
+* **Model Persistence**: Implement saving and loading of the trained model and preprocessing objects (scaler, label_encoder) using joblib
+* **More Advanced Tuning**: Explore RandomizedSearchCV for larger hyperparameter search spaces, or advanced tuning libraries like Optuna/Hyperopt
+* **Model Comparison**: Evaluate other classification algorithms (e.g., SVM, Gradient Boosting, K-Nearest Neighbors) to compare their performance and characteristics
+* **Introduce Noise**: Add controlled noise to the dataset to simulate real-world measurement inaccuracies and observe how the model's performance degrades, and how well it can recover after tuning
+* **Feature Engineering**: Explore creating new features from existing ones (e.g., ratios, products)
+
+## Contributing
+Feel free to fork this repository, open issues, or submit pull requests
