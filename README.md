@@ -6,6 +6,8 @@ This project aims to build a machine learning model to classify stars based on d
 ## Dataset
 The dataset used in this project is from Kaggle: [Star Type Classification Dataset](https://www.kaggle.com/datasets/deepu1109/star-dataset)
 
+Download the [stardataset.csv](https://github.com/Vijayesh314/Stellar-Classification-with-Python/blob/main/stardataset.csv) file and place it in the root directory of this project
+
 ## Features and Target Variable
 The dataset includes the following features (renamed in my code for clarity purposes)
 * Temperature: Surface temperature of the star in Kelvin
