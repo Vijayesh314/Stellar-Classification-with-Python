@@ -76,6 +76,3 @@ The model achieves very high accuracy on this dataset, indicating a strong corre
 * **Model Comparison**: Evaluate other classification algorithms (e.g., SVM, Gradient Boosting, K-Nearest Neighbors) to compare their performance and characteristics
 * **Introduce Noise**: Add controlled noise to the dataset to simulate real-world measurement inaccuracies and observe how the model's performance degrades, and how well it can recover after tuning
 * **Feature Engineering**: Explore creating new features from existing ones (e.g., ratios, products)
-
-## Contributing
-Feel free to fork this repository, open issues, or submit pull requests
