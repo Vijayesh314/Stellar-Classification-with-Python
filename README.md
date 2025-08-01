@@ -68,7 +68,7 @@ Generates several plots to show the distribution of the key features
 * It also includes an example of predicting the star type for a completely hypothetical star, demonstrating the full end-to-end prediction pipeline
 
 ### Results
-The model achieves very high accuracy on this dataset, indicating a strong correlation between the physical properties and star type. The various plots and reports provide a deep dive into the model's performance and the characteristics of the data. The stellar classification is correlated to the Hertzsprung–Russell diagram, a key astrophysics relationship.
+The model achieves a perfect accuracy on this dataset, indicating a strong correlation between the physical properties and star type. The various plots and reports provide a deep dive into the model's performance and the characteristics of the data. The stellar classification is correlated to the Hertzsprung–Russell diagram, a key astrophysics relationship.
 
 ## Next Steps/Future Enhancements
 * **Model Persistence**: Implement saving and loading of the trained model and preprocessing objects (scaler, label_encoder) using joblib
