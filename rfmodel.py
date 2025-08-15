@@ -256,8 +256,3 @@ sampleoriginaldata["PredictionCorrect"] = (sampleoriginaldata["TrueStarType"] ==
 
 print("Sample of Test Data with Predictions:")
 print(sampleoriginaldata)
-
-# Save the model, scaler, and lecolor for later Flask app use
-joblib.dump(model, "rf_star_model.pkl")
-joblib.dump(scaler, "scaler.pkl")
-joblib.dump(lecolor, "lecolor.pkl")
