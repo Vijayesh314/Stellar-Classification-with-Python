@@ -230,7 +230,6 @@ plt.ylabel("Star Type")
 plt.show()
 
 # Showing Predictions on Sample Data
-
 samplesnum = 10
 sampleindices = np.random.choice(xtest.index, samplesnum, replace=False)
 
